@@ -1,0 +1,49 @@
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PassoContador.MainPage"
+             BackgroundColor="Black">
+
+    <VerticalStackLayout Padding="30"
+                         Spacing="20"
+                         HorizontalOptions="Center"
+                         VerticalOptions="Center">
+
+        <!-- Imagem do Shadow -->
+        <Image x:Name="ShadowImage"
+               Source="shadow.png"
+               HeightRequest="150"
+               WidthRequest="150"
+               Aspect="AspectFit" />
+
+        <!-- Texto motivacional -->
+        <Label Text="Vamos correr, maggot."
+               FontSize="24"
+               TextColor="Red"
+               FontAttributes="Bold"
+               HorizontalTextAlignment="Center" />
+
+        <!-- Barra de progresso -->
+        <ProgressBar x:Name="ProgressoBar"
+                    Progress="0"
+                    BackgroundColor="Gray"
+                    ProgressColor="Red"
+                    WidthRequest="200"
+                    HeightRequest="10"/>
+
+        <!-- Botão que simula contar passos -->
+        <Button x:Name="CounterBtn"
+                Text="Contar passo"
+                Clicked="OnCounterClicked"
+                FontSize="20"
+                BackgroundColor="DarkRed"
+                TextColor="White"
+                CornerRadius="15" />
+
+        <!-- Texto de passos e distância -->
+        <Label x:Name="ResultadoLabel"
+               Text="0 passos / 0.0 km"
+               FontSize="18"
+               TextColor="White"
+               HorizontalTextAlignment="Center" />
+    </VerticalStackLayout>
+</ContentPage>
