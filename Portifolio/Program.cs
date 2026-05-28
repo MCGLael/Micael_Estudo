@@ -11,7 +11,7 @@ namespace Portifolio.Iniciante
 
         public static void Main()
         {
-            Console.WriteLine("Escolha o exemplo que quer executar: \n1 -> Calculadora\n2 -> Conversor de temperatura\n3 -> Jogo de Advinha");
+            Console.WriteLine("Escolha o exemplo que quer executar: \n1 -> Calculadora\n2 -> Conversor de temperatura\n3 -> Jogo de Advinha\n4 -> SistemaLogin");
             if (!int.TryParse(Console.ReadLine(), out int opcao))
             {
                 Console.WriteLine("Opção invalida. Encerrando programa...");
@@ -28,6 +28,9 @@ namespace Portifolio.Iniciante
                     break;
                 case 3:
                     JogoAdivinha.Executar();
+                    break;
+                case 4:
+                    SistemaLogin.Executar();
                     break;
                 default:
                     Console.WriteLine("Opção invalida, encerrando programa...");
