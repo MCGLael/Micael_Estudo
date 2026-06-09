@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -37,7 +38,7 @@ namespace Portifolio.Intermediario
         }
         public override int Ultimate()
         { 
-            return Damage + 5;
+            return Damage + 30;
         }
         
         public int Shield (){ 
@@ -56,7 +57,7 @@ namespace Portifolio.Intermediario
         }
         public override int Ultimate()
         {
-            return Damage + 5;
+            return Defense + 10;
         }
 
         public int MagicShield()
@@ -77,12 +78,7 @@ namespace Portifolio.Intermediario
         }
         public override int Ultimate()
         {
-            return Damage;
-        }
-        public override void HealingPotion()
-        {
-            Hp = Hp + 20;
-
+            return Hp + 100;
         }
         public int Shield()
         {
@@ -101,12 +97,7 @@ namespace Portifolio.Intermediario
         }
         public override int Ultimate()
         {
-            return Damage;
-        }
-        public override void HealingPotion()
-        {
-            Hp = Hp + 20;
-
+            return Damage + 50;
         }
         public int Shield()
         {
@@ -116,7 +107,44 @@ namespace Portifolio.Intermediario
     }
 
 
-    internal class Class1
+    internal class RpgProject
     {
+        private static Role createRole(int option)
+        {
+            switch (option)
+            {
+                case 1:
+                    return new Knight();
+                    break;
+                case 2:
+                    return new Mage();
+                    break;
+                case 3:
+                    return new Tank();
+                    break;
+                case 4:
+                    return new Heroe();
+                    break;
+                default:
+                    return null;
+                    }
+        }
+        public static void Executar()
+        {
+            Console.WriteLine("Welcome to the Valarium RPG");
+
+            Console.WriteLine("A terrible attack is happening, quicky! chose your Role!");
+            Console.WriteLine("1 - Knight\n2 - Mage\n3 - Tank\n4 - Heroe\n5 - Leave");
+            Role player;
+            Role enemy;
+            if (!int.TryParse(Console.ReadLine(), out int option)) { Console.WriteLine("Invalid"); return; }
+            player = createRole(option);
+            if (player == null) { Console.WriteLine("Invalid Value"); return; }
+            //Criação do Inimigo
+            int enemyoption = new Random().Next(1, 5);//1-Knight, 2-Mage, 3-Tank, 4-Heroe
+            enemy = createRole(enemyoption);
+;           Console.WriteLine($"Oh! There you are! {player.Name}! We need your help!\nThe terrible {enemy.Name} is attacking us!");
+            Console.WriteLine("You have engaged in battle!");
+        }
     }
 }

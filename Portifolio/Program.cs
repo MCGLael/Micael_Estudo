@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Portifolio.Iniciante;
+using Portifolio.Intermediario;
 
-namespace Portifolio.Iniciante
+namespace Portifolio
 {
     public class Programa
     {
 
         public static void Main()
         {
-            Console.WriteLine("Escolha o exemplo que quer executar: \n1 -> Calculadora\n2 -> Conversor de temperatura\n3 -> Jogo de Advinha\n4 -> Sistema de Login\n5 -> Pedra Papel Tesoura");
+            Console.WriteLine("Escolha o exemplo que quer executar: \n1 -> Calc\n2 -> TemperatureConverter\n3 -> Guessing Game\n4 -> Login System\n5 -> Jo Ken Pô\n6 -> RPG Game");
             if (!int.TryParse(Console.ReadLine(), out int opcao))
             {
                 Console.WriteLine("Opção invalida. Encerrando programa...");
@@ -34,6 +36,9 @@ namespace Portifolio.Iniciante
                     break;
                 case 5:
                     PedraPapelTesoura.Executar();
+                    break;
+                case 6:
+                    RpgProject.Executar();
                     break;
                 default:
                     Console.WriteLine("Opção invalida, encerrando programa...");
