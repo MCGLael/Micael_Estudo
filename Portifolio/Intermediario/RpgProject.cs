@@ -22,6 +22,13 @@ namespace Portifolio.Intermediario
 
 
         public virtual void HealingPotion() { Hp = Hp + 20; }
+        public virtual void takeDamege(int Damage) { 
+            int finalDamage = Damage - Defense;
+            if (finalDamage <=0) { finalDamage = 0; }
+            
+            Hp -= finalDamage; 
+        
+        }
 
         public abstract int Ultimate();
         
@@ -109,26 +116,43 @@ namespace Portifolio.Intermediario
 
     internal class RpgProject
     {
+        private static void combat(int option, Role player)
+        {
+            switch (option)
+            {
+                case 1:
+                    player.Attack();
+                    break;
+                case 2:
+                    player.Shield();
+                    break;
+                case 3:
+                     player.HealingPotion();
+                    break;
+                case 4:
+                     player.Ultimate();
+                    break;
+                default:
+                    return;
+            }
+        }
         private static Role createRole(int option)
         {
             switch (option)
             {
                 case 1:
                     return new Knight();
-                    break;
                 case 2:
                     return new Mage();
-                    break;
                 case 3:
                     return new Tank();
-                    break;
                 case 4:
                     return new Heroe();
-                    break;
                 default:
                     return null;
                     }
         }
+        
         public static void Executar()
         {
             Console.WriteLine("Welcome to the Valarium RPG");
@@ -145,6 +169,20 @@ namespace Portifolio.Intermediario
             enemy = createRole(enemyoption);
 ;           Console.WriteLine($"Oh! There you are! {player.Name}! We need your help!\nThe terrible {enemy.Name} is attacking us!");
             Console.WriteLine("You have engaged in battle!");
+
+            int i = 1;
+
+            while(i != 0){
+                
+                Console.WriteLine("What will you do now?!");
+                Console.WriteLine($"HP:{player.Hp}\nEnemy HP{enemy.Hp}");
+                Console.WriteLine("1 - Attack\n2 - Defense\n3 - Heal\n4 - Ultimate ");
+                if (!int.TryParse(Console.ReadLine(), out int playeropt)) { Console.WriteLine("What are you doing!!!"); }
+                switch (playeropt)
+                {
+                    case 1
+                }
+            }
         }
     }
 }
