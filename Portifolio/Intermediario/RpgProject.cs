@@ -7,11 +7,16 @@ using System.Threading.Tasks;
 
 namespace Portifolio.Intermediario
 {
+    public class randomizer
+    {
+        public static readonly Random random = new();
+    }
     public abstract class Role
     {
-
+        
         public string Name { get; set; }
         public int Hp { get; set; }
+        public int MaxHp { get; set; }
         public int BaseDamage { get; set; }
         public int BaseDefense { get; set; }
 
@@ -40,11 +45,19 @@ namespace Portifolio.Intermediario
 
         public virtual void HealingPotion()
         {
-           
-            Hp = Hp + 20;
+            int healAmount = Hp + 20;
+            if(healAmount > MaxHp) { healAmount = MaxHp; }
+            Hp = healAmount;
             Potions--;
         }
         public virtual void Reset() { }
+        public void Resetdefense() 
+        {
+            if (Defense > BaseDefense)
+            {
+                Defense = BaseDefense;
+            }
+        }
         
 
         public abstract void Ultimate();
@@ -56,7 +69,8 @@ namespace Portifolio.Intermediario
         public Knight()
         {
             Name = "Valerium";
-            Hp = 100;
+            MaxHp = 100;
+            Hp = MaxHp;
             BaseDamage = 30;
             Damage = BaseDamage;
             BaseDefense = 40;
@@ -88,10 +102,12 @@ namespace Portifolio.Intermediario
         public Mage()
         {
             Name = "Merlin";
-            Hp = 65;
+            MaxHp = 80;
+            Hp = MaxHp;
             BaseDamage = 60;
             Damage = BaseDamage;
-            Defense = 20;
+            BaseDefense = 20;
+            Defense = BaseDefense;
             Potions = 5;
         }
         public override void Ultimate()
@@ -122,10 +138,12 @@ namespace Portifolio.Intermediario
         public Tank()
         {
             Name = "Mono";
-            Hp = 500;
+            MaxHp = 200;
+            Hp = MaxHp;
             BaseDamage = 20;
             Damage = BaseDamage;
-            Defense = 80;
+            BaseDefense = 80;
+            Defense = BaseDefense;
             Potions = 2;
         }
         public override void Ultimate()
@@ -134,7 +152,7 @@ namespace Portifolio.Intermediario
             if (CoolDown == 0)
             {
                 Console.WriteLine("Flair of Life!");
-                Damage += 50;
+                Hp += 50;
                 CoolDown = 3;
             }
             else
@@ -149,10 +167,12 @@ namespace Portifolio.Intermediario
         public Ladin()
         {
             Name = "Kazuma";
-            Hp = 70;
+            MaxHp = 70;
+            Hp = MaxHp;
             BaseDamage = 50;
             Damage = BaseDamage;
-            Defense = 30;
+            BaseDefense = 30;
+            Defense = BaseDefense;
             Potions = 5;
             
         }
@@ -174,7 +194,7 @@ namespace Portifolio.Intermediario
         }
         public override int Attack() 
         {
-            int criticalHit = new Random().Next(1, 6);
+            int criticalHit = randomizer.random.Next(1, 6);
             if (criticalHit == 3)
             {
                 Console.WriteLine("Critical hit!");
@@ -189,19 +209,22 @@ namespace Portifolio.Intermediario
 
     internal class RpgProject
     {
-        private static readonly Random random = new Random();
 
+        //private static readonly Random random;
         private static void combat(int option, Role agent, Role pacient)
         {
             switch (option)
             {
                 case 1://Attack
                     Console.WriteLine("Attack!\n");
-                    pacient.Hp -= agent.Attack();
+                    int damageTaken = agent.Attack() - pacient.Defense;
+                    if(damageTaken < 0) { damageTaken = 0; }
+                    pacient.Hp -= damageTaken;
                     if (pacient.Hp < 0) { pacient.Hp = 0; }
 
                     break;
                 case 2://Defense
+                    Console.WriteLine("Defense!\n");
                     agent.Defense += 20;
                     
                     break;
@@ -256,7 +279,7 @@ namespace Portifolio.Intermediario
             if (option == 5) { Console.WriteLine("Leaving the Game..."); return; }
             if (player == null) { Console.WriteLine("Invalid Value"); return; }
                 //Criação do Inimigo
-                int enemyoption = random.Next(1, 5);//1-Knight, 2-Mage, 3-Tank, 4-Heroe
+                int enemyoption = randomizer.random.Next(1, 5);//1-Knight, 2-Mage, 3-Tank, 4-Heroe
             enemy = createRole(enemyoption);
             Console.WriteLine($"You are {player.Name}\nHP: {player.Hp}\nDamage: {player.Damage}\nDefense: {player.Defense}\nPotions: {player.Potions}\n");
 ;           Console.WriteLine($"Oh! There you are! {player.Name}! We need your help!\nThe terrible {enemy.Name} is attacking us!");
@@ -266,11 +289,7 @@ namespace Portifolio.Intermediario
 
             while(i != 0)
             {
-                if (player.Hp <= 0)
-                {
-                    Console.WriteLine("You Lose!");
-                    break;
-                }
+                
                 enemy.Cd();
                 player.Cd();
                 Console.WriteLine("What will you do now?!");
@@ -278,17 +297,24 @@ namespace Portifolio.Intermediario
                 Console.WriteLine("1 - Attack\n2 - Defense\n3 - Heal\n4 - Ultimate ");
                 if (!int.TryParse(Console.ReadLine(), out int playeropt)) { Console.WriteLine("What are you doing!!!"); }
                 Console.Write("You: ");
+                player.Resetdefense();
                 combat(playeropt, player, enemy);
                 if(enemy.Hp <= 0)
                 {
                     Console.WriteLine("You Won!");
                     break;
                 }
-                Console.Write("Enemy: ");
-                int enemyopt = random.Next(1, 5);
-                combat(enemyopt, enemy, player);
+                enemy.Resetdefense();
                 
+                Console.Write("Enemy: ");
+                int enemyopt = randomizer.random.Next(1, 5);
+                combat(enemyopt, enemy, player);
 
+                if (player.Hp <= 0)
+                {
+                    Console.WriteLine("You Lose!");
+                    i = 0;
+                }
             }
             Console.WriteLine("Thanks for playing");
         }
