@@ -71,9 +71,9 @@ namespace Portifolio.Intermediario
             Name = "Valerium";
             MaxHp = 100;
             Hp = MaxHp;
-            BaseDamage = 30;
+            BaseDamage = 50;
             Damage = BaseDamage;
-            BaseDefense = 40;
+            BaseDefense = 20;
             Defense = BaseDefense;
             Potions = 3;
         }
@@ -106,7 +106,7 @@ namespace Portifolio.Intermediario
             Hp = MaxHp;
             BaseDamage = 60;
             Damage = BaseDamage;
-            BaseDefense = 20;
+            BaseDefense = 10;
             Defense = BaseDefense;
             Potions = 5;
         }
@@ -140,9 +140,9 @@ namespace Portifolio.Intermediario
             Name = "Mono";
             MaxHp = 200;
             Hp = MaxHp;
-            BaseDamage = 20;
+            BaseDamage = 40;
             Damage = BaseDamage;
-            BaseDefense = 80;
+            BaseDefense = 20;
             Defense = BaseDefense;
             Potions = 2;
         }
@@ -171,7 +171,7 @@ namespace Portifolio.Intermediario
             Hp = MaxHp;
             BaseDamage = 50;
             Damage = BaseDamage;
-            BaseDefense = 30;
+            BaseDefense = 10;
             Defense = BaseDefense;
             Potions = 5;
             
