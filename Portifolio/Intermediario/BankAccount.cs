@@ -12,6 +12,12 @@ namespace Portifolio.Intermediario
         public decimal Balance { get; set; }
         public int Password { get; set; }
 
+        public Account(string ownername, decimal balance, int password)
+        {
+            OwnerName = ownername;
+            Balance = balance;
+            Password = password;
+        }
         public void deposit(decimal Amount)
         {
             Balance += Amount;
@@ -28,62 +34,37 @@ namespace Portifolio.Intermediario
         }
 
     }
-    public class UserOne : Account 
-    {
-        public UserOne()
-        {
-            OwnerName = "Thiago Matias";
-            Balance = 1500;
-            Password = 1233;
-        }
-    
-    }
-    public class UserTwo : Account
-    {
-        public UserTwo()
-        {
-            OwnerName = "Nate Jacobs";
-            Balance = 0;
-            Password = 1324;
-        }
-
-    }
-    public class UserThree : Account
-    {
-        public UserThree()
-        {
-            OwnerName = "Dylan Ribeiro";
-            Balance = 500;
-            Password = 1111;
-        }
-
-    }
-
 
     internal class BankAccount
     {
-        
+        static List<Account> accounts = new()
+            {
+                new Account("Thiago Matias", 1500, 1111),
+                new Account("Nate Jacobs", 0, 1221),
+                new Account("Dylan Ribeiro", 600, 1234)
+
+            };
+
         public static decimal money()
         {
-            
             if (!decimal.TryParse(Console.ReadLine(), out decimal Money)) { Console.WriteLine("Invalid"); return 0; }
             return Money;
         }
-        public static Account Validation(int UserPassword)
+        public static Account Login(int UserPassword)
         {
-            switch (UserPassword)
+
+            foreach(Account account in accounts)
             {
-                case 1233:
-                    return new UserOne();
-                case 1324:
-                    return new UserTwo();
-                case 1111:
-                    return new UserThree();
-                default:
-                    Console.WriteLine("Wrong Password, please take out your card");
-                    return null;
+                if(UserPassword == account.Password)
+                {
+                    return account;
+                }     
             }
+            return null;
+            
         }
+        
+        
         public static void AccountOptions(int Option, Account User)
         {
             
@@ -118,10 +99,11 @@ namespace Portifolio.Intermediario
         public static void Executar()
         {
             
+            
             Console.WriteLine("Welcome to ThunderBank, please insert your card...");
             Console.WriteLine("Password:\n");
             if (!int.TryParse(Console.ReadLine(), out int password)) { Console.WriteLine("Invalid, please take out your card"); return; }
-            Account User = Validation(password);
+            Account User = Login(password);
             Console.WriteLine($"Welcome {User.OwnerName}\n");
             bool exit = false;
             while (!exit == true)
