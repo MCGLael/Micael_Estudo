@@ -5,11 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Portifolio.Iniciante;
 using Portifolio.Intermediario;
+using System.Collections.Generic;
 
 namespace Portifolio
 {
     public class Programa
     {
+        
 
         public static void Main()
         {
@@ -21,36 +23,31 @@ namespace Portifolio
                 Console.ReadKey();
                 return;
             }
-            switch (opcao)
+            Dictionary<int, (string Name, Action Executar)> Exercicios = new()
             {
-                case 1:
-                        Calculadora.Executar();
-                    break;
-                case 2:
-                    ConversorTemperatura.Executar();
-                    break;
-                case 3:
-                    JogoAdivinha.Executar();
-                    break;
-                case 4:
-                    SistemaLogin.Executar();
-                    break;
-                case 5:
-                    PedraPapelTesoura.Executar();
-                    break;
-                case 6:
-                    RpgProject.Executar();
-                    break;
-                case 7:
-                    BankAccount.Executar();
-                    break;
-                default:
-                    Console.WriteLine("Opção invalida, encerrando programa...");
-                    return;
+                /*INICIANTE*/
+                {1, ("Calculator", Calculadora.Executar)},
+                {2, ("Temperature convertor", ConversorTemperatura.Executar)},
+                {3, ("Guessing Game", JogoAdivinha.Executar)},
+                {4, ("Login System", SistemaLogin.Executar)},
+                {5, ("Jo Ken Po!", PedraPapelTesoura.Executar)},
+
+                /*INTERMEDIARIO*/
+                {6, ("RPG", RpgProject.Executar)},
+                {7, ("Bank Account", BankAccount.Executar)}
+
+            };
+            if(Exercicios.TryGetValue(opcao, out var Executar))
+            {
+                Executar.Executar();
             }
-
-
-
+            else { 
+                Exercicios.Last().Value.Executar();
+            }
+            foreach(var Exercicio in Exercicios)
+            {
+                Console.WriteLine($"{Exercicio.Key} - {Exercicio.Value.Name}");
+            }
         }
     }
 }
