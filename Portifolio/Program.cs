@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Portifolio.Iniciante;
 using Portifolio.Intermediario;
-using System.Collections.Generic;
+
 
 namespace Portifolio
 {
