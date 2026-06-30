@@ -22,7 +22,7 @@ namespace Portifolio.Intermediario
 
     internal class Dealership
     {
-        Dictionary<int, Car> cars = new()
+        static Dictionary<int, Car> cars = new()
         {
             {1, new Car("4X4", "Mistubishi", 50000.50) },
             {2, new Car("Sedan", "Honda", 30000.00) },
@@ -32,12 +32,20 @@ namespace Portifolio.Intermediario
         public void AddCar(string model, string brand, double price)
         {
             int key = cars.Count == 0 ? 1: cars.Last().Key+1;// Get the next key based on the last key in the dictionary
-            cars.Add(key+1, new Car(model, brand, price));
+            cars.Add(key, new Car(model, brand, price));
+        }
+        public static void ListCars()
+        {
+            foreach(var (key, car) in cars)
+            {
+                Console.WriteLine($"ID: {key} -- Model: {car.Model} -- Brand: {car.Brand} -- Price: {car.Price}");
+            }
         }
         public static void Executar()
         {
             Console.WriteLine("Welcome to CarShop");
             Console.WriteLine("Would you like to add a car to our DataBase? - 1\nWould you like to look what cars we have? - 2\n Are you looking for a specifc car? - 3");
+            Dealership.ListCars();
         }
     }
 }
