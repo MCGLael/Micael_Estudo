@@ -104,6 +104,7 @@ namespace Portifolio.Intermediario
             Console.WriteLine("Password:\n");
             if (!int.TryParse(Console.ReadLine(), out int password)) { Console.WriteLine("Invalid, please take out your card"); return; }
             Account User = Login(password);
+            if(User == null) { Console.WriteLine("User Invalid. Exit program"); return; }
             Console.WriteLine($"Welcome {User.OwnerName}\n");
             bool exit = false;
             while (!exit == true)
