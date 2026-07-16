@@ -29,7 +29,8 @@ namespace Portifolio
                 /*INTERMEDIARIO*/
                 {6, ("RPG", RpgProject.Executar)},
                 {7, ("Bank Account", BankAccount.Executar)},
-                {8, ("Car Shop", Dealership.Executar)}
+                {8, ("Car Shop", Dealership.Executar)},
+                {9, ("Task Manager", TaskManager.Executar)}
 
             };
             foreach (var Exercicio in Exercicios)
