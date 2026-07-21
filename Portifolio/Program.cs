@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Portifolio.Iniciante;
 using Portifolio.Intermediario;
+using Portifolio.Avancado;
 
 
 namespace Portifolio
@@ -30,7 +31,10 @@ namespace Portifolio
                 {6, ("RPG", RpgProject.Executar)},
                 {7, ("Bank Account", BankAccount.Executar)},
                 {8, ("Car Shop", Dealership.Executar)},
-                {9, ("Task Manager", TaskManager.Executar)}
+                {9, ("Task Manager", TaskManager.Executar)},
+
+                /*Avançado*/
+                {10, ("Shop System", ShopSystem.Executar)},
 
             };
             foreach (var Exercicio in Exercicios)
