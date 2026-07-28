@@ -66,7 +66,7 @@ namespace Portifolio.Avancado
             {133, new Coupons(50) },
         };
 
-        List<Product> products = new List<Product>
+        static List<Product> products = new List<Product>
         {
             new Product(1, "Bread", 3.5m, 10),
             new Product(2, "Eggs", 4, 10),
@@ -74,6 +74,16 @@ namespace Portifolio.Avancado
             new Product(4, "Bread", 3.5m, 10),
         };
         List<CartItem> cart = new List<CartItem>();
+
+        private Coupons? appliedCoupon;
+
+        public static void ShowProducts()
+        {
+            foreach (var item in products)
+            {
+                Console.WriteLine($"{item.Name} -- Price: {item.Price} -- Stock: {item.Stock}");
+            }
+        }
         public void Buy(int itemCode, int amount)
         {
             Product item = products.FirstOrDefault(p => p.Id == itemCode);
@@ -102,21 +112,41 @@ namespace Portifolio.Avancado
 
         }
         public decimal Total()
-        {
-            decimal Total = cart.Sum(t => t.ProductPrice * t.Quantity);
-            Console.WriteLine($"The total amount is: {Total:C}");
-            return Total;
+        { 
+            return cart.Sum(t => t.ProductPrice * t.Quantity); ;
         }
         public void Discount(int code)
         {
             if(coupon.TryGetValue(code, out Coupons foundCoupon))
             {
+                appliedCoupon = foundCoupon;
+                Console.WriteLine($"You got {appliedCoupon.Discount}% OFF");
+            }
+
+        }
+        public decimal Chekout()
+        {
+            decimal total = Total();
+            if (appliedCoupon != null)
+            {
+                total -= total * appliedCoupon.Discount / 100;
 
             }
+            return total;
+        }
+        public void choice(int option)
+        {
 
         }
         public static void Executar()
         {
+            Console.WriteLine("Welcome to Your Shop!");
+
+            int i = 0;
+            while(i == 0)
+            {
+                ShowProducts();
+            }
 
         }
     }
