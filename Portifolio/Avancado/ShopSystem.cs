@@ -66,22 +66,22 @@ namespace Portifolio.Avancado
             {133, new Coupons(50) },
         };
 
-        static List<Product> products = new List<Product>
+        private readonly List<Product> products = new List<Product>
         {
             new Product(1, "Bread", 3.5m, 10),
             new Product(2, "Eggs", 4, 10),
             new Product(3, "Bread", 3.5m, 10 ),
             new Product(4, "Bread", 3.5m, 10),
         };
-        List<CartItem> cart = new List<CartItem>();
+        readonly List<CartItem> cart = new List<CartItem>();
 
         private Coupons? appliedCoupon;
 
-        public static void ShowProducts()
+        public void ShowProducts()
         {
             foreach (var item in products)
             {
-                Console.WriteLine($"{item.Name} -- Price: {item.Price} -- Stock: {item.Stock}");
+                Console.WriteLine($"{item.Id} -- {item.Name} -- {item.Price}$ -- {item.Stock} UND");
             }
         }
         public void Buy(int itemCode, int amount)
@@ -113,7 +113,7 @@ namespace Portifolio.Avancado
         }
         public decimal Total()
         { 
-            return cart.Sum(t => t.ProductPrice * t.Quantity); ;
+            return cart.Sum(t => t.ProductPrice * t.Quantity); 
         }
         public void Discount(int code)
         {
@@ -134,19 +134,68 @@ namespace Portifolio.Avancado
             }
             return total;
         }
+        public void ShowCart()
+        {
+         foreach (var item in cart)
+            {
+                Console.WriteLine($"{item.ProductId} -- {item.ProductName} -- {item.ProductPrice} -- {item.Quantity}\n");
+            }
+            Total();
+        }
         public void choice(int option)
         {
+            switch (option)
+            {
+                case 1:
+                    Console.WriteLine("Products\n");
+                    ShowProducts();
+                    break;
+                case 2:
+                    Console.WriteLine("insert the product's code and amount");
+                    if(!int.TryParse(Console.ReadLine(), out int id)) { Console.WriteLine("Invalid Option, Try Again"); return; }
+                    if(!int.TryParse(Console.ReadLine(), out int amount)) { Console.WriteLine("Invalid Option, Try Again"); return; }
 
+                    Buy(id, amount);
+                    break;
+                case 3:
+                    Console.WriteLine("Insert your Coupon");
+                    if (!int.TryParse(Console.ReadLine(), out int code)) { Console.WriteLine("Invalid Option, Try Again"); return; }
+                    Discount(code);
+                    break;
+                case 4:
+                    Console.WriteLine($"Checkout, Your Total is {Chekout()}");
+                    break;
+                case 5:
+                    ShowCart();
+                    break;
+                case 6:
+                    Console.WriteLine("Exiting...");
+                    break;
+                default:
+                    Console.WriteLine("Invalid option, please try again");
+                    return;
+            }
         }
         public static void Executar()
         {
             Console.WriteLine("Welcome to Your Shop!");
 
-            int i = 0;
-            while(i == 0)
+            ShopSystem client = new ShopSystem();
+            bool exit = false;
+            while(exit == false)
             {
-                ShowProducts();
-            }
+
+                Console.WriteLine("1 - Catalog\n2 - Buy Product\n3 - Apply Discount Coupon\n4 - Checkout\n5 - Cart\n6 -- Exit ");
+                if(!int.TryParse( Console.ReadLine(), out int option)){ Console.WriteLine("Invalid Option, Try Again"); return; }
+                if (option == 6)
+                {
+                    Console.WriteLine("Thank you for buying in Your Shop");
+                    exit = true;
+                }
+                
+                client.choice(option);
+                
+                }
 
         }
     }
