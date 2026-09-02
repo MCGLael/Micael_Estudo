@@ -1,3 +1,7 @@
+
+
+using Microsoft.AspNetCore.Mvc;
+
 var builder = WebApplication.CreateBuilder(args);
 /*builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -17,7 +21,7 @@ List<Product> Shelf = new List<Product>()
 };
 app.MapGet("/Hello", () => "Hello World!");
 
-app.MapGet("/Shelf/{id}", (int id) =>
+app.MapGet("/Products/{id}", (int id) =>
 {
 
     
@@ -29,6 +33,12 @@ app.MapGet("/Shelf/{id}", (int id) =>
     //var item = Shelf.Find(p => p.id == "Apple");
     return Results.Ok(item); //$"Name: {item?.Name}\nPrice: {item?.Price}\nStock: {item?.Stock}";
     
+});
+app.MapGet("/Products", () => Shelf);
+
+app.MapPost("/Products", ([FromBody] Product newProduct) =>
+{
+    return Results.Created($"/Products/{newProduct.Id}", newProduct);
 });
 
 app.Run();
