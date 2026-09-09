@@ -69,6 +69,24 @@ app.MapPost("/Products", (Product newProduct) =>
     return Results.Created($"/Products/{newProduct.Id}", newProduct);
 });
 
+app.MapPut("/Products/{id}", (int id, Product updatedProduct) =>
+{
+    var verifyProduct = Shelf.FirstOrDefault(p => p.Id == id);
+
+    if (verifyProduct == null)
+    {
+        return Results.NotFound("Product Not Found");
+    }
+    
+    verifyProduct.Name = updatedProduct.Name;
+    verifyProduct.Price = updatedProduct.Price;
+    verifyProduct.Stock = updatedProduct.Stock;
+
+    /*Shelf.Remove(verifyProduct);
+    Shelf.Add(updatedProduct);*/
+
+    return Results.NoContent();
+});
 app.Run();
 
 public class Product
