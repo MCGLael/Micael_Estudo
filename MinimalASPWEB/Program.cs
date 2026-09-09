@@ -12,6 +12,31 @@ var app = builder.Build();
 app.UseSwaggerUI();
 */
 
+app.MapGet("/", () =>
+{
+    var htmlContent = """
+    <!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <title>Minimal API com JS</title>
+    </head>
+    <body>
+        <h1>Olá da Minimal API!</h1>
+        <button id="btn">Clique aqui</button>
+
+        <script>
+            document.getElementById('btn').addEventListener('click', () => {
+                alert('JavaScript executado direto do Program.cs!');
+            });
+        </script>
+    </body>
+    </html>
+    """;
+
+    return Results.Content(htmlContent, "text/html", System.Text.Encoding.UTF8);
+});
+
 List<Product> Shelf = new List<Product>()
 {
     new Product(1, "Apple", 3.49, 5),
@@ -36,8 +61,11 @@ app.MapGet("/Products/{id}", (int id) =>
 });
 app.MapGet("/Products", () => Shelf);
 
-app.MapPost("/Products", ([FromBody] Product newProduct) =>
+app.MapPost("/Products", (Product newProduct) =>
 {
+    int ultimoId = Shelf.LastOrDefault()?.Id ?? 0;
+    newProduct.Id = ultimoId+1;
+    Shelf.Add(newProduct);
     return Results.Created($"/Products/{newProduct.Id}", newProduct);
 });
 
