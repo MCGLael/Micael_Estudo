@@ -3,14 +3,14 @@
 using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
-/*builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-*/
+
 var app = builder.Build();
 
-/*app.UseSwagger();
+app.UseSwagger();
 app.UseSwaggerUI();
-*/
+
 
 app.MapGet("/", () =>
 {
@@ -22,12 +22,12 @@ app.MapGet("/", () =>
         <title>Minimal API com JS</title>
     </head>
     <body>
-        <h1>Olá da Minimal API!</h1>
-        <button id="btn">Clique aqui</button>
+        <h1>Hello and Welcome to my Minimal API!</h1>
+        <button id="btn">Click me!</button>
 
         <script>
             document.getElementById('btn').addEventListener('click', () => {
-                alert('JavaScript executado direto do Program.cs!');
+                alert('JavaScript is working!');
             });
         </script>
     </body>
@@ -84,6 +84,20 @@ app.MapPut("/Products/{id}", (int id, Product updatedProduct) =>
 
     /*Shelf.Remove(verifyProduct);
     Shelf.Add(updatedProduct);*/
+
+    return Results.NoContent();
+});
+app.MapDelete("/Products/{id}", (int id) =>
+{
+    var verifyProduct = Shelf.FirstOrDefault(p => p.Id == id);
+
+    if (verifyProduct == null)
+    {
+        return Results.NotFound("Product Not Found");
+    }
+    
+    Shelf.Remove(verifyProduct);
+    
 
     return Results.NoContent();
 });
