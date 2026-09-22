@@ -102,7 +102,7 @@ app.MapDelete("/Products/{id}", (int id) =>
     return Results.NoContent();
 });
 app.Run();
-
+;
 public class Product
 {
     public int Id { get; set; } 
