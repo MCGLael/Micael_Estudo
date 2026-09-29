@@ -1,5 +1,5 @@
 
-
+using MinimalASPWEB.Models;
 using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -61,15 +61,23 @@ app.MapGet("/Products/{id}", (int id) =>
 });
 app.MapGet("/Products", () => Shelf);
 
-app.MapPost("/Products", (Product newProduct) =>
+app.MapPost("/Products", (ProductDto Productdto) =>
 {
     int ultimoId = Shelf.LastOrDefault()?.Id ?? 0;
-    newProduct.Id = ultimoId+1;
+
+    /*string name = Productdto.Name;
+    double price = Productdto.Price;
+    int stock = Productdto.Stock;
+    int id = ultimoId+1;*/
+
+    Product newProduct = new Product(ultimoId + 1, Productdto.Name, Productdto.Price, Productdto.Stock);
+
     Shelf.Add(newProduct);
+
     return Results.Created($"/Products/{newProduct.Id}", newProduct);
 });
 
-app.MapPut("/Products/{id}", (int id, Product updatedProduct) =>
+app.MapPut("/Products/{id}", (int id, ProductDto updatedProduct) =>
 {
     var verifyProduct = Shelf.FirstOrDefault(p => p.Id == id);
 
@@ -81,10 +89,6 @@ app.MapPut("/Products/{id}", (int id, Product updatedProduct) =>
     verifyProduct.Name = updatedProduct.Name;
     verifyProduct.Price = updatedProduct.Price;
     verifyProduct.Stock = updatedProduct.Stock;
-
-    /*Shelf.Remove(verifyProduct);
-    Shelf.Add(updatedProduct);*/
-
     return Results.NoContent();
 });
 app.MapDelete("/Products/{id}", (int id) =>
@@ -101,23 +105,5 @@ app.MapDelete("/Products/{id}", (int id) =>
 
     return Results.NoContent();
 });
-app.Run();
+app.Run(); 
 ;
-public class Product
-{
-    public int Id { get; set; } 
-    public string Name { get; set; }
-
-    public double Price { get; set; }
-
-    public int Stock { get; set; }
-
-    public Product(int id, String name, double price, int stock)
-    {
-        Id = id;
-        Name = name;
-        Price = price;
-        Stock = stock;
-    }
-}
-
