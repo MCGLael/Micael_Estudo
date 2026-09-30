@@ -64,11 +64,10 @@ app.MapGet("/Products", () => Shelf);
 app.MapPost("/Products", (ProductDto Productdto) =>
 {
     int ultimoId = Shelf.LastOrDefault()?.Id ?? 0;
-
-    /*string name = Productdto.Name;
-    double price = Productdto.Price;
-    int stock = Productdto.Stock;
-    int id = ultimoId+1;*/
+    if (string.IsNullOrWhiteSpace(Productdto.Name) || Productdto.Price <= 0 || Productdto.Stock < 0)
+    {
+        return Results.BadRequest();
+    }
 
     Product newProduct = new Product(ultimoId + 1, Productdto.Name, Productdto.Price, Productdto.Stock);
 
@@ -80,11 +79,16 @@ app.MapPost("/Products", (ProductDto Productdto) =>
 app.MapPut("/Products/{id}", (int id, ProductDto updatedProduct) =>
 {
     var verifyProduct = Shelf.FirstOrDefault(p => p.Id == id);
-
     if (verifyProduct == null)
     {
         return Results.NotFound("Product Not Found");
     }
+    if (string.IsNullOrWhiteSpace(updatedProduct.Name) || updatedProduct.Price <= 0 || updatedProduct.Stock < 0)
+    {
+        return Results.BadRequest();
+    }
+
+    
     
     verifyProduct.Name = updatedProduct.Name;
     verifyProduct.Price = updatedProduct.Price;
