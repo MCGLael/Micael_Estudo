@@ -1,5 +1,6 @@
 
 using MinimalASPWEB.Models;
+using MinimalASPWEB.ValidationProduct;
 using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+ValidationProduct Validator = new ValidationProduct();
 
 app.UseSwagger();
 app.UseSwaggerUI();
@@ -64,11 +66,12 @@ app.MapGet("/Products", () => Shelf);
 app.MapPost("/Products", (ProductDto Productdto) =>
 {
     int ultimoId = Shelf.LastOrDefault()?.Id ?? 0;
-    if (string.IsNullOrWhiteSpace(Productdto.Name) || Productdto.Price <= 0 || Productdto.Stock < 0)
+
+    if (!Validator.IsValid(Productdto))
     {
         return Results.BadRequest();
     }
-
+   
     Product newProduct = new Product(ultimoId + 1, Productdto.Name, Productdto.Price, Productdto.Stock);
 
     Shelf.Add(newProduct);
@@ -79,11 +82,13 @@ app.MapPost("/Products", (ProductDto Productdto) =>
 app.MapPut("/Products/{id}", (int id, ProductDto updatedProduct) =>
 {
     var verifyProduct = Shelf.FirstOrDefault(p => p.Id == id);
+    
+    
     if (verifyProduct == null)
     {
         return Results.NotFound("Product Not Found");
     }
-    if (string.IsNullOrWhiteSpace(updatedProduct.Name) || updatedProduct.Price <= 0 || updatedProduct.Stock < 0)
+    if (!Validator.IsValid(updatedProduct))
     {
         return Results.BadRequest();
     }
