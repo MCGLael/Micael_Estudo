@@ -1,71 +1,42 @@
-
+using MinimalASPWEB.Services;
 using MinimalASPWEB.Models;
 using MinimalASPWEB.ValidationProduct;
-using Microsoft.AspNetCore.Mvc;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddTransient<ProductService>();
+builder.Services.AddTransient<ValidationProduct>();
+
 
 var app = builder.Build();
-ValidationProduct Validator = new ValidationProduct();
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
 
-app.MapGet("/", () =>
-{
-    var htmlContent = """
-    <!DOCTYPE html>
-    <html lang="pt-BR">
-    <head>
-        <meta charset="UTF-8">
-        <title>Minimal API com JS</title>
-    </head>
-    <body>
-        <h1>Hello and Welcome to my Minimal API!</h1>
-        <button id="btn">Click me!</button>
 
-        <script>
-            document.getElementById('btn').addEventListener('click', () => {
-                alert('JavaScript is working!');
-            });
-        </script>
-    </body>
-    </html>
-    """;
-
-    return Results.Content(htmlContent, "text/html", System.Text.Encoding.UTF8);
-});
-
-List<Product> Shelf = new List<Product>()
-{
-    new Product(1, "Apple", 3.49, 5),
-    new Product(2, "Banana", 5.9, 5),
-    new Product(3, "Strawberry", 1.99, 5)
-
-};
 app.MapGet("/Hello", () => "Hello World!");
 
-app.MapGet("/Products/{id}", (int id) =>
+app.MapGet("/Products/{id}", (int id, ProductService products) =>
 {
+    var item = products.GetItem(id);
 
-    
-        var item = Shelf.FirstOrDefault(x => x.Id == id);
     if (item == null)
     {
         return Results.NotFound("Not Found");
     }
-    //var item = Shelf.Find(p => p.id == "Apple");
-    return Results.Ok(item); //$"Name: {item?.Name}\nPrice: {item?.Price}\nStock: {item?.Stock}";
     
+    return Results.Ok(item); 
 });
-app.MapGet("/Products", () => Shelf);
 
-app.MapPost("/Products", (ProductDto Productdto) =>
+app.MapGet("/Products", (ProductService products) => products.GetAll());
+
+app.MapPost("/Products", (ProductDto Productdto, ValidationProduct Validator) =>
 {
-    int ultimoId = Shelf.LastOrDefault()?.Id ?? 0;
+    int ultimoId = shelf.LastOrDefault()?.Id ?? 0;
 
     if (!Validator.IsValid(Productdto))
     {
@@ -74,14 +45,14 @@ app.MapPost("/Products", (ProductDto Productdto) =>
    
     Product newProduct = new Product(ultimoId + 1, Productdto.Name, Productdto.Price, Productdto.Stock);
 
-    Shelf.Add(newProduct);
+    shelf.Add(newProduct);
 
     return Results.Created($"/Products/{newProduct.Id}", newProduct);
 });
 
-app.MapPut("/Products/{id}", (int id, ProductDto updatedProduct) =>
+app.MapPut("/Products/{id}", (int id, ProductDto updatedProduct, ValidationProduct Validator) =>
 {
-    var verifyProduct = Shelf.FirstOrDefault(p => p.Id == id);
+    var verifyProduct = shelf.FirstOrDefault(p => p.Id == id);
     
     
     if (verifyProduct == null)
@@ -102,17 +73,16 @@ app.MapPut("/Products/{id}", (int id, ProductDto updatedProduct) =>
 });
 app.MapDelete("/Products/{id}", (int id) =>
 {
-    var verifyProduct = Shelf.FirstOrDefault(p => p.Id == id);
+    var verifyProduct = shelf.FirstOrDefault(p => p.Id == id);
 
     if (verifyProduct == null)
     {
         return Results.NotFound("Product Not Found");
     }
     
-    Shelf.Remove(verifyProduct);
+    shelf.Remove(verifyProduct);
     
 
     return Results.NoContent();
 });
 app.Run(); 
-;
