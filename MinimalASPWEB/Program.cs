@@ -7,7 +7,7 @@ using MinimalASPWEB.ValidationProduct;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddTransient<ProductService>();
+builder.Services.AddSingleton<ProductService>()
 builder.Services.AddTransient<ValidationProduct>();
 
 
@@ -34,20 +34,20 @@ app.MapGet("/Products/{id}", (int id, ProductService products) =>
 
 app.MapGet("/Products", (ProductService products) => products.GetAll());
 
-app.MapPost("/Products", (ProductDto Productdto, ValidationProduct Validator) =>
+app.MapPost("/Products", (ProductDto product, ProductService products, ValidationProduct Validator) =>
 {
-    int ultimoId = shelf.LastOrDefault()?.Id ?? 0;
-
-    if (!Validator.IsValid(Productdto))
+    if (!Validator.IsValid(product))
     {
         return Results.BadRequest();
     }
-   
-    Product newProduct = new Product(ultimoId + 1, Productdto.Name, Productdto.Price, Productdto.Stock);
+var item = products.AddItem(product.Name, product.Price, product.Stock);
+    if (item == null)
+    {
+        return Results.Conflict(new {mensage = "Name already existent"});
+    }
 
-    shelf.Add(newProduct);
 
-    return Results.Created($"/Products/{newProduct.Id}", newProduct);
+    return Results.Created($"/Product/{item.Id}", item);
 });
 
 app.MapPut("/Products/{id}", (int id, ProductDto updatedProduct, ValidationProduct Validator) =>

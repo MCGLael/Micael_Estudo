@@ -1,4 +1,5 @@
 ﻿using MinimalASPWEB.Models;
+using MinimalASPWEB.ValidationProduct;
 using System;
 
 
@@ -24,10 +25,17 @@ namespace MinimalASPWEB.Services
             return item;
         }
 
-        public Product AddItem(String Name, Double Price, int Stock)
+        public Product? AddItem(String Name, Double Price, int Stock)
         {
-            int ultimoId = Shelf.LastOrDefault()?.Id ?? 0;
-            return null;
+            int lastId = (Shelf.Max(p => (int?)p.Id) ?? 0) + 1;
+            bool verificationName = Shelf.Any(n => n.Name == Name);
+            if (verificationName)
+            {
+                return null;
+            }
+            var item = new Product(lastId, Name, Price, Stock);
+            Shelf.Add(item);
+            return item;
         }
 
         
