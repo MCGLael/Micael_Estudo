@@ -7,7 +7,7 @@ using MinimalASPWEB.ValidationProduct;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton<ProductService>()
+builder.Services.AddSingleton<ProductService>();
 builder.Services.AddTransient<ValidationProduct>();
 
 
@@ -50,27 +50,20 @@ var item = products.AddItem(product.Name, product.Price, product.Stock);
     return Results.Created($"/Product/{item.Id}", item);
 });
 
-app.MapPut("/Products/{id}", (int id, ProductDto updatedProduct, ValidationProduct Validator) =>
+app.MapPut("/Products/{id}", (int id, ProductDto updatedProduct, ProductService products, ValidationProduct Validator) =>
 {
-    var verifyProduct = shelf.FirstOrDefault(p => p.Id == id);
-    
-    
-    if (verifyProduct == null)
-    {
-        return Results.NotFound("Product Not Found");
-    }
     if (!Validator.IsValid(updatedProduct))
     {
         return Results.BadRequest();
     }
-
-    
-    
-    verifyProduct.Name = updatedProduct.Name;
-    verifyProduct.Price = updatedProduct.Price;
-    verifyProduct.Stock = updatedProduct.Stock;
+    var validation = products.UpdateItem(id, updatedProduct.Name, updatedProduct.Price, updatedProduct.Stock);
+    if (validation == null)
+    {
+        return Results.NotFound("Product Not Found");
+    }
     return Results.NoContent();
 });
+
 app.MapDelete("/Products/{id}", (int id) =>
 {
     var verifyProduct = shelf.FirstOrDefault(p => p.Id == id);

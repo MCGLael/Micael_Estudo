@@ -29,13 +29,27 @@ namespace MinimalASPWEB.Services
         {
             int lastId = (Shelf.Max(p => (int?)p.Id) ?? 0) + 1;
             bool verificationName = Shelf.Any(n => n.Name == Name);
-            if (verificationName)
+            if (verificationName == false)
             {
                 return null;
             }
             var item = new Product(lastId, Name, Price, Stock);
             Shelf.Add(item);
             return item;
+        }
+        public Product? UpdateItem(int Id, String Name, Double Price, int Stock)
+        {
+            var updateItem = Shelf.FirstOrDefault(i => i.Id == Id);
+            if (updateItem == null)
+            {
+                return null;
+            }
+            updateItem.Name = Name;
+            updateItem.Price = Price;
+            updateItem.Stock = Stock;
+            
+            
+            return updateItem;
         }
 
         
