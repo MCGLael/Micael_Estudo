@@ -52,6 +52,18 @@ namespace MinimalASPWEB.Services
             return updateItem;
         }
 
+        public bool DeleteItem(int Id)
+        {
+            var item = Shelf.FirstOrDefault(i => i.Id == Id);
+            if (item == null)
+            {
+                return false;
+            }
+            Shelf.Remove(item);
+
+            return true;
+        }
+
         
     }
      

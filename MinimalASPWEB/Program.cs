@@ -64,17 +64,15 @@ app.MapPut("/Products/{id}", (int id, ProductDto updatedProduct, ProductService 
     return Results.NoContent();
 });
 
-app.MapDelete("/Products/{id}", (int id) =>
+app.MapDelete("/Products/{id}", (int id, ProductService products) =>
 {
-    var verifyProduct = shelf.FirstOrDefault(p => p.Id == id);
+    
+    bool _item = products.DeleteItem(id);
 
-    if (verifyProduct == null)
+    if (!_item)
     {
         return Results.NotFound("Product Not Found");
     }
-    
-    shelf.Remove(verifyProduct);
-    
 
     return Results.NoContent();
 });
