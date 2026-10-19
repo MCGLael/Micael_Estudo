@@ -1,15 +1,25 @@
 using MinimalASPWEB.Services;
 using MinimalASPWEB.Models;
 using MinimalASPWEB.ValidationProduct;
-
+using Microsoft.EntityFrameworkCore;
+using MinimalASPWEB.Data;
 
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton<ProductService>();
+//builder.Services.AddSingleton<ProductService>();
+builder.Services.AddScoped<ProductService>();
 builder.Services.AddTransient<ValidationProduct>();
 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseMySql(
+        connectionString,
+        ServerVersion.AutoDetect(connectionString)
+    )
+);
 
 var app = builder.Build();
 
