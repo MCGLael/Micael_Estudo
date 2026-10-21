@@ -2,14 +2,15 @@
 {
     public class Product
     {
+        
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
-        public double Price { get; set; }
+        public decimal Price { get; set; }
 
         public int Stock { get; set; }
 
-        public Product(int id, String name, double price, int stock)
+        public Product( int id, String name, decimal price, int stock)
         {
             Id = id;
             Name = name;
@@ -20,9 +21,9 @@
 
     public class ProductDto
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
-        public double Price { get; set; }
+        public decimal Price { get; set; }
         public int Stock { get; set; }
     }
 }
