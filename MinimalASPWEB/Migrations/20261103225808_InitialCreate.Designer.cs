@@ -11,7 +11,7 @@ using MinimalASPWEB.Data;
 namespace MinimalASPWEB.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261021223058_InitialCreate")]
+    [Migration("20261103225808_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -37,7 +37,8 @@ namespace MinimalASPWEB.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(65,30)");
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
 
                     b.Property<int>("Stock")
                         .HasColumnType("int");
