@@ -1,4 +1,7 @@
-﻿using MinimalASPWEB.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using MinimalASPWEB.Data;
+using MinimalASPWEB.Models;
 using MinimalASPWEB.ValidationProduct;
 using System;
 
@@ -8,53 +11,63 @@ namespace MinimalASPWEB.Services
 {
     public class ProductService
     {
-        private List <Product> Shelf = new List<Product>() {
-                new Product(1, "Apple", 3.49m, 5),
-                new Product(2, "Banana", 5.9m, 5),
-                new Product(3, "Strawberry", 1.99m, 5)
-        };
+        private readonly AppDbContext _context;
 
-        public IEnumerable<Product> GetAll()
+        public ProductService(AppDbContext context)
         {
-            return Shelf; 
+            _context = context;
         }
 
-        public Product? GetItem(int id)
+
+        public async Task<List<Product>> GetAllAsync()
         {
-            var item = Shelf.FirstOrDefault(p => p.Id == id);
+            var itens = await _context.Produtos.ToListAsync();
+            return itens;
+        }
+
+        public async Task<Product?> GetItemAsync(int id)
+        {
+            var item = await _context.Produtos.FirstOrDefaultAsync(p => p.Id == id);
             return item;
         }
 
-        public Product? AddItem(string Name, decimal Price, int Stock)
+        public async Task<Product?> AddItemAsync(Product product)
         {
-            int lastId = (Shelf.Max(p => (int?)p.Id) ?? 0) + 1;
-            bool verificationName = Shelf.Any(n => n.Name == Name);
+            bool verificationName = await _context.Produtos.AnyAsync(n => n.Name == product.Name);
             if (verificationName == false)
             {
                 return null;
             }
-            var item = new Product(lastId, Name, Price, Stock);
-            Shelf.Add(item);
-            return item;
+            //var item = new Product(product);
+            await _context.Produtos.AddAsync(product);
+
+            await _context.SaveChangesAsync();
+
+            return product;
         }
-        public Product? UpdateItem(int Id, string Name, decimal Price, int Stock)
+        public async Task<Product?> UpdateItemAsync(int id, Product product)
         {
-            var updateItem = Shelf.FirstOrDefault(i => i.Id == Id);
+            if (id != product.Id) 
+            {
+                return null;
+            }
+            var updateItem = await _context.Produtos.FirstOrDefaultAsync(i => i.Id == product.Id);
             if (updateItem == null)
             {
                 return null;
             }
-            updateItem.Name = Name;
-            updateItem.Price = Price;
-            updateItem.Stock = Stock;
-            
-            
+            updateItem.Name = product.Name;
+            updateItem.Price = product.Price;
+            updateItem.Stock = product.Stock;
+
+            await _context.SaveChangesAsync();
+
             return updateItem;
         }
 
-        public bool DeleteItem(int Id)
+        public async Task<Product?> DeleteItemAsync(int Id)
         {
-            var item = Shelf.FirstOrDefault(i => i.Id == Id);
+            var item = await _context.Produtos.FirstOrDefaultAsync(i => i.Id == Id);
             if (item == null)
             {
                 return false;
@@ -64,7 +77,7 @@ namespace MinimalASPWEB.Services
             return true;
         }
 
-        
-    }
+
+    } }
      
     }
