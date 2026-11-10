@@ -24,13 +24,17 @@ namespace MinimalASPWEB.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Price = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
                     Stock = table.Column<int>(type: "int", nullable: false)
+
                 },
+
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Produtos", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
+
         }
+
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)

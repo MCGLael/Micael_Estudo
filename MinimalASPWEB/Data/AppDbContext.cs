@@ -13,7 +13,12 @@ namespace MinimalASPWEB.Data
                 .Property(p => p.Price)
                 .HasPrecision(10, 2);
 
+            modelBuilder.Entity<Product>()
+                .HasIndex(p => p.Name)
+                .IsUnique();
+
             base.OnModelCreating(modelBuilder);
+
         }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {

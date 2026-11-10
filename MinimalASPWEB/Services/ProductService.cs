@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
 using Microsoft.EntityFrameworkCore;
 using MinimalASPWEB.Data;
 using MinimalASPWEB.Models;
-using MinimalASPWEB.ValidationProduct;
-using System;
+
+
 
 
 namespace MinimalASPWEB.Services
@@ -21,25 +21,25 @@ namespace MinimalASPWEB.Services
 
         public async Task<List<Product>> GetAllAsync()
         {
-            var itens = await _context.Produtos.ToListAsync();
-            return itens;
+            return await _context.Produtos.ToListAsync();
+            
         }
 
         public async Task<Product?> GetItemAsync(int id)
         {
-            var item = await _context.Produtos.FirstOrDefaultAsync(p => p.Id == id);
-            return item;
+            return await _context.Produtos.FirstOrDefaultAsync(p => p.Id == id);
+            
         }
 
         public async Task<Product?> AddItemAsync(Product product)
         {
             bool verificationName = await _context.Produtos.AnyAsync(n => n.Name == product.Name);
-            if (verificationName == false)
+            if (verificationName)
             {
                 return null;
             }
-            //var item = new Product(product);
-            await _context.Produtos.AddAsync(product);
+            
+            _context.Produtos.Add(product);
 
             await _context.SaveChangesAsync();
 
@@ -65,19 +65,21 @@ namespace MinimalASPWEB.Services
             return updateItem;
         }
 
-        public async Task<Product?> DeleteItemAsync(int Id)
+        public async Task<bool> DeleteItemAsync(int Id)
         {
             var item = await _context.Produtos.FirstOrDefaultAsync(i => i.Id == Id);
             if (item == null)
             {
                 return false;
             }
-            Shelf.Remove(item);
+            _context.Produtos.Remove(item);
+
+            await _context.SaveChangesAsync();
 
             return true;
         }
 
 
-    } }
-     
-    }
+    } 
+}
+    
