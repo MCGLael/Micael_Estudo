@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MinimalASPWEB.Data;
 using MinimalASPWEB.Models;
-
+using System;
 
 
 
@@ -45,7 +45,7 @@ namespace MinimalASPWEB.Services
 
             return product;
         }
-        public async Task<Product?> UpdateItemAsync(int id, Product product)
+        public async Task<Product?> UpdateItemAsync(int id, Product product )
         {
             if (id != product.Id) 
             {

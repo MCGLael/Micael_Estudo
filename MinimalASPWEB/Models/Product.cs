@@ -10,6 +10,7 @@
 
         public int Stock { get; set; }
 
+        public Product() { }
         public Product( int id, String name, decimal price, int stock)
         {
             Id = id;
