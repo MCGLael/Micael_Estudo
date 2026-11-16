@@ -8,7 +8,6 @@ using MinimalASPWEB.Data;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-//builder.Services.AddSingleton<ProductService>();
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddTransient<ValidationProduct>();
 
@@ -30,9 +29,9 @@ app.UseSwaggerUI();
 
 app.MapGet("/Hello", () => "Hello World!");
 
-app.MapGet("/Products/{id}", (int id, ProductService products) =>
+app.MapGet("/Products/{id}", async (int id, ProductService products) =>
 {
-    var item = products.GetItemAsync(id);
+    var item = await products.GetItemAsync(id);
 
     if (item == null)
     {
@@ -42,7 +41,7 @@ app.MapGet("/Products/{id}", (int id, ProductService products) =>
     return Results.Ok(item); 
 });
 
-app.MapGet("/Products", (ProductService products) => products.GetAllAsync());
+app.MapGet("/Products", async (ProductService products) => await products.GetAllAsync());
 
 app.MapPost("/Products", async (ProductDto productdto, ProductService products, ValidationProduct Validator) =>
 {

@@ -31,7 +31,7 @@ namespace MinimalASPWEB.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<decimal>("Price")
                         .HasPrecision(10, 2)
@@ -41,6 +41,9 @@ namespace MinimalASPWEB.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Produtos");
                 });
